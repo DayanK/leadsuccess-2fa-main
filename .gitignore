@@ -1,0 +1,34 @@
+# Node.js dependencies
+/backend/node_modules/
+/frontend/node_modules/
+
+# Environment variables
+/backend/.env
+/frontend/.env
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+
+# IDE/editor folders
+.vscode/
+.idea/
+
+# Build output (if applicable)
+dist/
+build/
+
+# Optional: ignore test coverage output
+coverage/
+
+# Optional: ignore compiled JS (if using TypeScript or other compilers)
+*.tsbuildinfo
+
+# Optional: ignore image thumbnails or generated content
+**/images/*.tmp
