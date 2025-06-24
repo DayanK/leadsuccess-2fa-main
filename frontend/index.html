@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeadSuccess Portal - Secure Access</title>
+    <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAdgAAAHYBTnsmCAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAANCSURBVFiFtZc9aBRBFMd/M7u7yWWzl4PEGCwsrBQrG1sLwcJCG1sLG0uxsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQsLGwsLBQ">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles/main.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#D86141',
+                        'primary-light': '#f8b4a6',
+                        'primary-dark': '#b53e20',
+                    }
+                }
+            }
+        };
+    </script>
+</head>
+
+<body class="bg-gray-50 min-h-screen">
+    <!-- Login Container -->
+    <div id="loginContainer" class="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8">
+        <div class="max-w-md w-full space-y-8">
+            <!-- Logo -->
+            <div class="text-center">
+                <div class="mx-auto h-16 w-16 bg-primary rounded-full flex items-center justify-center">
+                    <span class="text-2xl font-bold text-white">LS</span>
+                </div>
+                <h1 class="mt-4 text-2xl font-bold text-gray-900">LeadSuccess Portal</h1>
+                <p class="mt-2 text-sm text-gray-600">Secure access to your account</p>
+            </div>
+
+            <!-- Login Form -->
+            <div class="bg-white rounded-lg shadow-md p-6 space-y-6 fade-in">
+                <form id="loginForm" class="space-y-4">
+                    <div>
+                        <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
+                        <input type="text" id="username" name="username" required
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary">
+                    </div>
+
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                        <input type="password" id="password" name="password" required
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary">
+                    </div>
+
+                    <div class="flex items-start">
+                        <input type="checkbox" id="privacyConsent" required
+                            class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded mt-1">
+                        <label for="privacyConsent" class="ml-2 block text-sm text-gray-700">
+                            I agree to the <a href="#" class="text-primary hover:underline">Privacy Policy</a>
+                            and consent to data processing.
+                        </label>
+                    </div>
+
+                    <button type="submit" id="loginBtn" disabled
+                        class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-400 cursor-not-allowed disabled:opacity-50 transition-all duration-200">
+                        <span id="loginBtnText">Sign In</span>
+                        <div id="loginSpinner" class="spinner ml-2 hidden"></div>
+                    </button>
+                </form>
+
+                <div class="text-center">
+                    <a href="#" class="text-sm text-primary hover:underline">Forgot your password?</a>
+                </div>
+
+                <div id="loginError"
+                    class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded relative"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Layout -->
+    <div id="dashboardLayout" class="hidden min-h-screen bg-gray-50">
+        <!-- Header -->
+        <header class="bg-white shadow">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center py-4">
+                    <div class="flex items-center">
+                        <div class="h-8 w-8 bg-primary rounded-full flex items-center justify-center mr-3">
+                            <span class="text-sm font-bold text-white">LS</span>
+                        </div>
+                        <h1 class="text-xl font-semibold text-gray-900">LeadSuccess Portal</h1>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <span id="userDisplay" class="text-gray-700 font-medium"></span>
+                        <button onclick="logout()"
+                            class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                            <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <!-- Navigation Tabs -->
+            <div class="mb-8">
+                <nav class="flex space-x-8">
+                    <button onclick="showTab('overview')" data-tab="overview"
+                        class="tab-btn border-b-2 border-primary text-primary pb-2 px-1 text-sm font-medium">
+                        Overview
+                    </button>
+                    <button onclick="showTab('devices')" data-tab="devices"
+                        class="tab-btn border-b-2 border-transparent text-gray-500 hover:text-gray-700 pb-2 px-1 text-sm font-medium">
+                        Devices
+                    </button>
+                    <button onclick="showTab('sessions')" data-tab="sessions"
+                        class="tab-btn border-b-2 border-transparent text-gray-500 hover:text-gray-700 pb-2 px-1 text-sm font-medium">
+                        Sessions
+                    </button>
+                    <button onclick="showTab('security')" data-tab="security"
+                        class="tab-btn border-b-2 border-transparent text-gray-500 hover:text-gray-700 pb-2 px-1 text-sm font-medium">
+                        Security
+                    </button>
+                </nav>
+            </div>
+
+            <!-- Tab Contents -->
+            <div id="overviewTab" class="tab-content">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Account Information</h3>
+                        <div id="userInfo" class="space-y-3"></div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Security Status</h3>
+                        <div class="text-center py-8">
+                            <div id="securityIcon" class="text-4xl mb-4">🔒</div>
+                            <div id="securityStatus"
+                                class="text-sm font-medium text-green-600 bg-green-100 px-3 py-1 rounded-full inline-block">
+                                Account Secured
+                            </div>
+                            <div class="mt-4">
+                                <button onclick="show2FASetup()" id="setup2FABtn"
+                                    class="hidden bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
+                                    <i class="fas fa-shield-alt mr-2"></i>Enable 2FA
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="dbPasswordDisplay"
+                            class="hidden mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                            <h4 class="text-sm font-semibold text-yellow-800 mb-2">
+                                <i class="fas fa-key mr-2"></i>Database Password
+                            </h4>
+                            <p class="text-xs text-yellow-700 mb-2">Valid for 24 hours:</p>
+                            <div class="font-mono text-sm bg-white p-2 rounded border" id="dbPasswordValue"></div>
+                            <button onclick="copyDBPassword()"
+                                class="mt-2 text-xs bg-yellow-600 hover:bg-yellow-700 text-white px-3 py-1 rounded transition-colors">
+                                Copy
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="devicesTab" class="tab-content hidden">
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-lg font-semibold text-gray-900">Authentication Devices</h3>
+                        <button onclick="show2FASetup()"
+                            class="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
+                            <i class="fas fa-plus mr-2"></i>Add Device
+                        </button>
+                    </div>
+                    <div id="devicesList"></div>
+                </div>
+            </div>
+
+            <div id="sessionsTab" class="tab-content hidden">
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-lg font-semibold text-gray-900">Active Sessions</h3>
+                        <button onclick="logoutAllSessions()"
+                            class="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors group">
+                            <i class="fas fa-sign-out-alt mr-2 group-hover:animate-pulse"></i>
+                            <span>Logout Other Sessions</span>
+                        </button>
+                    </div>
+                    <div id="sessionsList"></div>
+                </div>
+            </div>
+
+            <div id="securityTab" class="tab-content hidden">
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-6">Security Settings</h3>
+
+                    <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
+                        <div class="flex">
+                            <i class="fas fa-exclamation-triangle text-yellow-400 mt-1 mr-3"></i>
+                            <div>
+                                <p class="text-yellow-700">
+                                    <strong>Warning:</strong> Disabling two-factor authentication reduces your account
+                                    security.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button onclick="showDisable2FAModal()"
+                        class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
+                        <i class="fas fa-shield-alt mr-2"></i>Disable 2FA
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div id="modalContainer"></div>
+
+    <!-- Scripts -->
+    <script src="js/config.js"></script>
+    <script src="js/api-client.js"></script>
+    <script src="js/ui-manager.js"></script>
+    <script src="js/auth-manager.js"></script>
+    <script src="js/app.js"></script>
+</body>
+
+</html>
